@@ -84,11 +84,17 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- ❌ FIXED: incorrect test deps -->
+        <!-- test deps -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- SECURITY dependency -->
+        <dependency>
+             <groupId>org.springframework.boot</groupId>
+             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!-- VALIDATION -->

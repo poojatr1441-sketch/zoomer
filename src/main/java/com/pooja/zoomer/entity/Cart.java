@@ -3,6 +3,7 @@ package com.pooja.zoomer.entity;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,5 +39,6 @@ public class Cart {
 	private Restaurant restaurant;
 	
 	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonManagedReference
 	private List<CartItem> cartItems;
 }

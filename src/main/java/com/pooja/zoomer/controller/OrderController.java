@@ -1,5 +1,6 @@
 package com.pooja.zoomer.controller;
 
+import com.pooja.zoomer.dto.OrderResponseDTO;
 import com.pooja.zoomer.entity.Order;
 import com.pooja.zoomer.entity.enums.PaymentMethod;
 import com.pooja.zoomer.service.OrderService;
@@ -29,7 +30,7 @@ public class OrderController {
 
     // 🔹 TRACK ORDER
     @GetMapping("/{orderId}")
-    public Order getOrder(@PathVariable Long orderId) {
+    public OrderResponseDTO getOrder(@PathVariable Long orderId) {
         return orderService.getOrder(orderId);
     }
 

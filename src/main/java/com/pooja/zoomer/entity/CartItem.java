@@ -2,6 +2,8 @@ package com.pooja.zoomer.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -25,6 +27,7 @@ public class CartItem {
 	@EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cart_id",nullable = false)
+	@JsonBackReference
 	private Cart cart;
 	
 	@ToString.Exclude

@@ -1,10 +1,18 @@
 package com.pooja.zoomer.entity;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "order_item")
 @Getter
@@ -24,6 +32,8 @@ public class OrderItem {
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
+    @JsonIgnore
     private Order order;
 
     @Column(name = "item_name", nullable = false)
@@ -35,4 +45,8 @@ public class OrderItem {
     @Column(nullable = false)
     @Positive
     private Integer quantity;
+    
+    @OneToMany(mappedBy = "orderItem")
+    @JsonManagedReference
+    private List<OrderItemAddon> addons;
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.pooja.zoomer.dto.OrderItemDTO;
+import com.pooja.zoomer.dto.OrderResponseDTO;
 import com.pooja.zoomer.entity.*;
 import com.pooja.zoomer.entity.enums.*;
 import com.pooja.zoomer.repository.*;
@@ -124,9 +126,12 @@ public class OrderService {
     }
 
     // 🔥 TRACK ORDER
-    public Order getOrder(Long orderId) {
-        return orderRepository.findById(orderId)
+    public OrderResponseDTO getOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        return convertToDTO(order);
     }
 
     // 🔥 CANCEL ORDER
@@ -239,4 +244,24 @@ public class OrderService {
 
         order.setOrderStatus(OrderStatus.DELIVERED);
     }
+    
+    public OrderResponseDTO convertToDTO(Order order) {
+
+        return OrderResponseDTO.builder()
+                .orderId(order.getOrderId())
+                .status(order.getOrderStatus().name())
+                .totalAmount(order.getTotalAmount())
+                .restaurantName(order.getRestaurant().getName())
+                .items(
+                    order.getOrderItems().stream().map(item ->
+                            OrderItemDTO.builder()
+                                    .itemName(item.getItemName())
+                                    .quantity(item.getQuantity())
+                                    .price(item.getItemPrice())
+                                    .build()
+                    ).toList()
+                )
+                .build();
+    }
+    
 }

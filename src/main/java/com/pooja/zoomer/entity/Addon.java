@@ -4,6 +4,9 @@ package com.pooja.zoomer.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,6 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Addon {
 	
 	@Id
@@ -31,6 +35,7 @@ public class Addon {
 	@ToString.Exclude
 	@EqualsAndHashCode.Exclude
 	@OneToMany(mappedBy = "addon", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonBackReference
 	private List<MenuItemAddon> menuItemAddons;
 
 }

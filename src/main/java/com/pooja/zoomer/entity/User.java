@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.pooja.zoomer.entity.enums.*;
 import lombok.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "users")
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.pooja.zoomer.dto.MenuItemResponseDTO;
 import com.pooja.zoomer.entity.MenuItem;
 import com.pooja.zoomer.service.MenuService;
 
@@ -19,13 +20,14 @@ public class MenuController {
     // 🔹 ADD MENU ITEM
     @PostMapping
     public MenuItem addMenuItem(@RequestParam Long restaurantId,
-                               @RequestBody MenuItem item) {
-        return menuService.addMenuItem(restaurantId, item);
+                               @RequestBody MenuItem item,
+                               @RequestParam(required = false) List<Long> addonIds) {
+        return menuService.addMenuItem(restaurantId, item, addonIds);
     }
 
     // 🔹 GET MENU
     @GetMapping("/{restaurantId}")
-    public List<MenuItem> getMenu(@PathVariable Long restaurantId) {
+    public List<MenuItemResponseDTO> getMenu(@PathVariable Long restaurantId) {
         return menuService.getMenu(restaurantId);
     }
 }

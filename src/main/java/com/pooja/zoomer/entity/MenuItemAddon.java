@@ -1,5 +1,7 @@
 package com.pooja.zoomer.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,11 +19,12 @@ public class MenuItemAddon {
 	
 	@ToString.Exclude
     @EqualsAndHashCode.Exclude
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@MapsId("addonId")
 	@JoinColumn(name = "addon_id", nullable = false)
 	private Addon addon;
 	
+	@JsonIgnore
 	@ToString.Exclude
     @EqualsAndHashCode.Exclude
 	@ManyToOne(fetch = FetchType.LAZY)

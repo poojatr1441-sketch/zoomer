@@ -1,6 +1,9 @@
 package com.pooja.zoomer.entity;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +26,7 @@ public class OrderItemAddon {
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_item_id", nullable = false)
+    @JsonBackReference
     private OrderItem orderItem;
 
     @Column(name = "addon_name", nullable = false)
@@ -30,4 +34,6 @@ public class OrderItemAddon {
 
     @Column(name = "addon_price", nullable = false)
     private BigDecimal addonPrice;
+    
+    
 }

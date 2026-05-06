@@ -1,12 +1,16 @@
 package com.pooja.zoomer.entity;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pooja.zoomer.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Table(name = "orders")
 
@@ -51,4 +55,8 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_agent_id")
     private User deliveryAgent;
+    
+    @OneToMany(mappedBy = "order")
+    @JsonManagedReference
+    private List<OrderItem> orderItems;
 }
