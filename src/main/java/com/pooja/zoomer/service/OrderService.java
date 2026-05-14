@@ -27,7 +27,8 @@ public class OrderService {
     private final OrderItemAddonRepository orderItemAddonRepository;
     private final PaymentRepository paymentRepository;
     private final AddressRepository addressRepository;
-
+    private final UserRepository userRepository;
+    
     // 🔥 STEP 1–7 → PLACE ORDER
     @Transactional
     public void placeOrder(Long userId, Long addressId, PaymentMethod method) {
@@ -168,15 +169,30 @@ public class OrderService {
     //RESTAURANT OWNER
     //accept order
     @Transactional
-    public void acceptOrder(Long orderId) {
+    public void acceptOrder(Long orderId, String email) {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔥 SECURITY CHECK
+        if (!order.getRestaurant()
+                .getOwner()
+                .getUserId()
+                .equals(owner.getUserId())) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You cannot access another owner's order"
+            );
+        }
+
         if (order.getOrderStatus() != OrderStatus.PENDING) {
             throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Only pending orders can be accepted"
+                    HttpStatus.BAD_REQUEST,
+                    "Only pending orders can be accepted"
             );
         }
 
@@ -185,21 +201,35 @@ public class OrderService {
     
     //restaurant cancels the order
     @Transactional
-    public void rejectOrder(Long orderId) {
+    public void rejectOrder(Long orderId, String email) {
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RuntimeException("Order not found"));
 
+        User owner = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 🔥 SECURITY CHECK
+        if (!order.getRestaurant()
+                .getOwner()
+                .getUserId()
+                .equals(owner.getUserId())) {
+
+            throw new ResponseStatusException(
+                    HttpStatus.FORBIDDEN,
+                    "You cannot access another owner's order"
+            );
+        }
+
         if (order.getOrderStatus() != OrderStatus.PENDING) {
             throw new ResponseStatusException(
-                HttpStatus.BAD_REQUEST,
-                "Only pending orders can be rejected"
+                    HttpStatus.BAD_REQUEST,
+                    "Only pending orders can be rejected"
             );
         }
 
         order.setOrderStatus(OrderStatus.REJECTED);
 
-        // 🔥 REFUND
         processRefund(order);
     }
     

@@ -1,13 +1,11 @@
 package com.pooja.zoomer.controller;
 
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 import com.pooja.zoomer.service.OrderService;
-
-import lombok.*;
 
 @RestController
 @RequestMapping("/owner")
@@ -17,14 +15,24 @@ public class OwnerController {
     private final OrderService orderService;
 
     @PutMapping("/order/{orderId}/accept")
-    public String acceptOrder(@PathVariable Long orderId) {
-        orderService.acceptOrder(orderId);
+    public String acceptOrder(@PathVariable Long orderId,
+                              Authentication authentication) {
+
+        String email = authentication.getName();
+
+        orderService.acceptOrder(orderId, email);
+
         return "Order accepted";
     }
 
     @PutMapping("/order/{orderId}/reject")
-    public String rejectOrder(@PathVariable Long orderId) {
-        orderService.rejectOrder(orderId);
+    public String rejectOrder(@PathVariable Long orderId,
+                              Authentication authentication) {
+
+        String email = authentication.getName();
+
+        orderService.rejectOrder(orderId, email);
+
         return "Order rejected";
     }
 }
