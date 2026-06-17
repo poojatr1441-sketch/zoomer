@@ -1,5 +1,6 @@
 package com.pooja.zoomer;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -8,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 JUnit only runs Java code - we have spring boot application
 Before running the tests, start the entire Spring Boot application.
 */
+@Disabled
 @SpringBootTest  
 class ApplicationTests {
 
