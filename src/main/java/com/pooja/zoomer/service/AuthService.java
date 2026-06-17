@@ -1,7 +1,10 @@
 package com.pooja.zoomer.service;
 
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.pooja.zoomer.entity.User;
 import com.pooja.zoomer.entity.enums.UserRole;
@@ -21,7 +24,7 @@ public class AuthService {
                 .email(email)
                 .phone(phone)
                 .role(role)
-               // .isActive(true)
+                .status(UserStatus.PENDING)
                 .build();
 
         return userRepository.save(user);
@@ -29,13 +32,26 @@ public class AuthService {
 
     public User login(String email) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    	System.out.println("===== LOGIN METHOD ENTERED =====");
+    	
+    	User user = userRepository.findByEmail(email)
+    	        .orElseThrow(() ->
+    	                new ResponseStatusException(
+    	                        HttpStatus.NOT_FOUND,
+    	                        "User not found"
+    	                ));
+    	
+    	System.out.println("EMAIL = " + user.getEmail());
+        System.out.println("ROLE = " + user.getRole());
+        System.out.println("STATUS = " + user.getStatus());
+    	
         // 🔴 ADD THIS CHECK HERE
-        if (user.getStatus() != UserStatus.APPROVED) {
-            throw new RuntimeException("User not approved");
-        }
+    	if (user.getStatus() != UserStatus.APPROVED) {
+    	    throw new ResponseStatusException(
+    	            HttpStatus.FORBIDDEN,
+    	            "User not approved"
+    	    );
+    	}
 
         return user;
     }

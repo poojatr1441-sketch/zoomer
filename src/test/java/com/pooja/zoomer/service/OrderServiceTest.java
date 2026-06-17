@@ -32,10 +32,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+//Enable Mockito features.
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Mock
+    @Mock //Creates a fake object
     private CartRepository cartRepository;
 
     @Mock
@@ -50,20 +51,28 @@ class OrderServiceTest {
     @Mock
     private OrderItemRepository orderItemRepository;
 
-    @InjectMocks
+    @InjectMocks //Creates the REAL object under test
     private OrderService orderService;
 
     @Test
     void shouldThrowExceptionWhenCartIsEmpty() {
-
-        // Arrange
+/*
+If cart is empty
+↓
+placeOrder()
+↓
+should throw exception
+ */
+  // Arrange
+    	//Create fake cart = 0 items
         Cart cart = new Cart();
         cart.setCartItems(new ArrayList<>());
 
+        //Mock repository behavior.
         when(cartRepository.findByUser_UserId(1L))
                 .thenReturn(Optional.of(cart));
 
-        // Act + Assert
+  // Act + Assert
         RuntimeException exception = assertThrows(
                 RuntimeException.class,
                 () -> orderService.placeOrder(1L, 1L, PaymentMethod.COD)

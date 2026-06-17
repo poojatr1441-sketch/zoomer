@@ -1,0 +1,21 @@
+services:
+	# Defines a service (container) called app
+  app:
+	# Use the Docker image named zoomer-app:latest
+	    # This image was created using:
+	    # docker build -t zoomer-app .
+    image: zoomer-app:latest
+    container_name: springboot_app
+    ports:
+		# HOST_PORT : CONTAINER_PORT
+		# Left side (8080) = Port on your laptop
+        # Right side (8080) = Port inside the container
+      - "8080:8080"
+    environment:
+# spring.datasource.url - host.docker.internal means:
+# "Go outside the container and connect to the Windows host machine"
+# Then PostgreSQL is running on:localhost:5432
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/Zoomer
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: Pooja@2001
+	 
