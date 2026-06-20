@@ -3,102 +3,62 @@ name: Zoomer CI-CD
 
 # Event that triggers this workflow
 on:
+  # Only trigger when push happens to main branch
   push:
-
-    # Only trigger when push happens to main branch
     branches:
       - main
 
 # Collection of jobs to execute
 jobs:
-
-  # Job name (can be any name)
+  # Job name
   build:
-
     # GitHub creates a temporary Ubuntu virtual machine
     runs-on: ubuntu-latest
 
     # List of steps executed sequentially
     steps:
-
       # Step 1: Download repository code into the GitHub runner
       - name: Checkout Code
-
         # Official GitHub action for cloning repository
         uses: actions/checkout@v4
 
       # Step 2: Install Java 17 on the runner
       - name: Setup Java 17
-
         # Official GitHub action for Java installation
         uses: actions/setup-java@v4
-
         # Configuration for Java installation
         with:
-
           # Java version required by Zoomer
           java-version: '17'
-
           # Eclipse Temurin JDK distribution
           distribution: 'temurin'
 
       # Step 3: Build Spring Boot project
       - name: Build Project
-
-        # Executes Maven commands
-        # clean   -> removes old target folder
-        # package -> compiles code, runs tests,
-        #            creates JAR file
+        # Executes Maven commands: clean and package
         run: mvn clean package
 
       # Step 4: Build Docker Image
       - name: Build Docker Image
-
-        # Docker reads Dockerfile
-        # Creates image named zoomer-app
-        #
-        # -t : tag/name for image
-        # .  : current directory containing Dockerfile
+        # Docker reads Dockerfile and creates image named zoomer-app
         run: docker build -t zoomer-app .
 
       # Step 5: Login to Docker Hub
       - name: Login to Docker Hub
-
-        # Official Docker action that performs
-        # docker login using GitHub Secrets
+        # Official Docker action that performs login using GitHub Secrets
         uses: docker/login-action@v3
-
         with:
-
-          # Docker Hub username stored securely
-          # in GitHub Repository Secrets
+          # Docker Hub username stored securely in GitHub Repository Secrets
           username: ${{ secrets.POOJA }}
-
-          # Docker Hub Personal Access Token
-          # stored securely in GitHub Secrets
+          # Docker Hub Personal Access Token stored securely in GitHub Secrets
           password: ${{ secrets.DOCKER_TOKEN }}
 
       # Step 6: Tag Docker Image
       - name: Tag Docker Image
-
-        # Renames the local image into the format
-        # required by Docker Hub
-        #
-        # Before:
-        #   zoomer-app
-        #
-        # After:
-        #   pooja1441/zoomer-app:latest
-        #
-        # latest = image version tag
+        # Renames the local image into the format required by Docker Hub
         run: docker tag zoomer-app pooja1441/zoomer-app:latest
 
       # Step 7: Push Docker Image to Docker Hub
       - name: Push Docker Image
-
-        # Uploads image from GitHub Runner
-        # to Docker Hub Registry
-        #
-        # After this step the image is stored
-        # permanently in Docker Hub
+        # Uploads image from GitHub Runner to Docker Hub Registry
         run: docker push pooja1441/zoomer-app:latest
