@@ -51,7 +51,7 @@ jobs:
           # Docker Hub username stored securely in GitHub Repository Secrets
           username: ${{ secrets.POOJA }}
           # Docker Hub Personal Access Token stored securely in GitHub Secrets
-          password: ${{ secrets.DOCKER_TOKEN }}
+          password: ${{ secrets.DOCKER_TOCKEN }}
 
       # Step 6: Tag Docker Image
       - name: Tag Docker Image
