@@ -45,7 +45,7 @@ public class AuthService {
         System.out.println("ROLE = " + user.getRole());
         System.out.println("STATUS = " + user.getStatus());
     	
-        // 🔴 ADD THIS CHECK HERE
+        //  CHECK HERE
     	if (user.getStatus() != UserStatus.APPROVED) {
     	    throw new ResponseStatusException(
     	            HttpStatus.FORBIDDEN,
